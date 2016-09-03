@@ -1,7 +1,6 @@
 package com.vmlens.executorService.internal.manyToOne;
 
 import com.vmlens.executorService.Consumer;
-import com.vmlens.executorService.internal.ArrayAndThreadIdConsumer;
 import com.vmlens.executorService.internal.ListNode;
 
 public class QueueSingleReader<E> extends ProcessConcurrentList<E> {

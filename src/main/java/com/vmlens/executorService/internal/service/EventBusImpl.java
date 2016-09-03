@@ -11,7 +11,10 @@ public class EventBusImpl<T> implements EventBus<T>   {
 	private final DispatcherThread dispatcherThread;
 	
 	
-	
+//	public createConsumerForThreadLocalStorage()
+//	{
+//		
+//	}
 	
 	
 	

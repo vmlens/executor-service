@@ -29,13 +29,21 @@ public class VMLensExecutorServiceFactory {
 	
 	public static ExecutorService create(int threadCount)
 	{
+		return create( threadCount, true);
+	}
+
+	
+	
+	
+	static ExecutorService create(int threadCount, boolean startThreads)
+	{
 		 ConcurrentLinkedList<Runnable> writingThreads = new ConcurrentLinkedList<Runnable>();
 	
 		 QueueSingleReader<Runnable> queueSingleReader = new QueueSingleReader<Runnable>(writingThreads);	
 	
 		 
 		 WorkerThreadForRunnable[] workerThreadArray = new WorkerThreadForRunnable[threadCount];
- 		 
+		 
 		 for(int i = 0 ; i < threadCount ; i++)
 		 {
 			 workerThreadArray[i] = new WorkerThreadForRunnable();
@@ -57,25 +65,30 @@ public class VMLensExecutorServiceFactory {
 		 DispatcherThread dispatcherThread = new DispatcherThread(queueSingleWriter,queueSingleReader);
 		 
 		
-		 
-		 dispatcherThread.start();
-		 
 		 QueueManyWriters<Runnable> queueManyWriters = new QueueManyWriters<Runnable>(writingThreads,dispatcherThread);
 		 
-		 
-		 
-		 
-		 for(int i = 0 ; i < threadCount ; i++)
+		 if( startThreads )
 		 {
-			 workerThreadArray[i].start();
+			 dispatcherThread.start();
+			 
+			 for(int i = 0 ; i < threadCount ; i++)
+			 {
+				 workerThreadArray[i].start();
+			 }
 		 }
+		 
+		
+		 
+		 
+		 
+		 
+		 
 		 
 		 
 		 
 		
 	 	return new ExecutorServiceImpl(queueManyWriters,dispatcherThread);
 	}
-
 	
 	
 	
