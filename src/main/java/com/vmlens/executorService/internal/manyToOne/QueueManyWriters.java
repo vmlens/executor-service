@@ -2,9 +2,10 @@ package com.vmlens.executorService.internal.manyToOne;
 
 import java.util.concurrent.RejectedExecutionException;
 
+
 import com.vmlens.executorService.internal.service.DispatcherThread;
 
-public class QueueManyWriters<E> {
+public class QueueManyWriters<E>  {
 	
 	private final ConcurrentLinkedList writingThreads;
 	private final DispatcherThread dispatcherThread;
@@ -24,7 +25,7 @@ public class QueueManyWriters<E> {
 	
 	
 	
-	public void push(E element)
+	public void accept(E element)
 	{
 		
 		if( dispatcherThread.stop )

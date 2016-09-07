@@ -8,11 +8,92 @@
   <packaging>jar</packaging>
 
   <name>executor-service</name>
-  <url>http://maven.apache.org</url>
+  <description>A high throughput java executor service</description>
+  <url>https://github.com/vmlens/executor-service</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+    <licenses>
+      <license>
+          <name>Eclipse Public License - v 1.0</name>
+          <url>http://www.eclipse.org/legal/epl-v10.html</url>
+      </license>
+   </licenses>
+   
+    <developers>
+       <developer>
+         <name>Thomas Krieger</name>
+         <email>thomas.krieger@vmlens.com</email>
+         <organization>vmlens</organization>
+         <organizationUrl>http://www.vmlens.com</organizationUrl>
+      </developer>
+    </developers>
+    
+    <scm>
+         <connection>scm:git:git@github.com:vmlens/executor-service.git</connection>
+         <developerConnection>cm:git:git@github.com:vmlens/executor-service.git</developerConnection>
+         <url>git@github.com:vmlens/executor-service.git</url>
+    </scm>
+
+
+
+
+
+
+
+
+
+  
+  
+   <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <configuration>
+          <excludes>
+            <exclude>**/CreateMemoryLeak.java</exclude>
+            <exclude>**/TestNoMemoryLeaks.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      
+       <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-source-plugin</artifactId>
+      <executions>
+        <execution>
+          <id>attach-sources</id>
+          <goals>
+            <goal>jar</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+     <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-javadoc-plugin</artifactId>
+      <executions>
+        <execution>
+          <id>attach-javadocs</id>
+          <goals>
+            <goal>jar</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin> 
+      
+      
+      
+      
+    </plugins>
+  </build>
+  
+  
+  
 
   <dependencies>
    

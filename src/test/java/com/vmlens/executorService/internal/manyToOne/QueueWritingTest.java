@@ -31,7 +31,7 @@ public class QueueWritingTest {
 		
 		for( int i = 0 ; i < ITERATION_COUNT ; i++)
 		{
-			queueWriter.push(i);
+			queueWriter.accept(i);
 		}
 		
 	}

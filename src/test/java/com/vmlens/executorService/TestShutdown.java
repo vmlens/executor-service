@@ -9,7 +9,7 @@ import org.junit.Test;
 
 public class TestShutdown {
 
-	private ExecutorService executorService =  VMLensExecutorServiceFactory.create(5);
+	private ExecutorService executorService =  VMLensExecutors.newHighThroughputExecutorService(5);
 	
 	
 	

@@ -7,7 +7,6 @@ import com.vmlens.executorService.internal.ListNode;
 import com.vmlens.executorService.internal.manyToOne.ConcurrentLinkedList;
 import com.vmlens.executorService.internal.manyToOne.LinkedNode;
 import com.vmlens.executorService.internal.manyToOne.QueueManyWriters;
-import com.vmlens.executorService.internal.manyToOne.QueueNode;
 import com.vmlens.executorService.internal.manyToOne.QueueSingleReader;
 import com.vmlens.executorService.internal.oneToMany.QueueSingleWriter;
 import com.vmlens.executorService.internal.oneToMany.ToBeConsumed;
@@ -19,23 +18,38 @@ import com.vmlens.executorService.internal.service.WorkerThreadForRunnable;
 
 /**
  * 
+ * A high throughput java executor service. 
+ * The vmlens executor service achieves three times higher 
+ * throughput than the standard JDK executor service. 
+ * The tradeoff is that the latency is much higher than that of the  standard JDK executor service. 
  * 
  * @author thomas
  *
  */
 
-public class VMLensExecutorServiceFactory {
+public class VMLensExecutors {
 	
+
 	
-	public static ExecutorService create(int threadCount)
+	/**
+	 * 
+	 * Creates a executor service that uses a fixed number of threads operating 
+	 * off a shared unbounded queue.
+	 * 
+	 * 
+	 * @param threadCount the number of threads in the pool
+	 * @return the newly created executor service
+	 */
+	
+	public static ExecutorService newHighThroughputExecutorService(int threadCount)
 	{
-		return create( threadCount, true);
+		return newExecutorService( threadCount, true);
 	}
 
 	
 	
 	
-	static ExecutorService create(int threadCount, boolean startThreads)
+	static ExecutorService newExecutorService(int threadCount, boolean startThreads)
 	{
 		 ConcurrentLinkedList<Runnable> writingThreads = new ConcurrentLinkedList<Runnable>();
 	
@@ -127,15 +141,6 @@ public class VMLensExecutorServiceFactory {
 		 }
 		 
 		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
-		 
 		
 		 
 		 
@@ -157,7 +162,7 @@ public class VMLensExecutorServiceFactory {
 		 
 		 
 		
-	 	return new EventBusImpl<T>(queueManyWriters,dispatcherThread);
+	 	return new EventBusImpl<T>(queueManyWriters,dispatcherThread,writingThreads);
 	}
 
 	

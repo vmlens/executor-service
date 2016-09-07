@@ -26,7 +26,7 @@ public class ExecutorServiceImpl extends AbstractExecutorService {
 
 	public void execute(Runnable command) {
 		
-		queueManyWriters.push(command);
+		queueManyWriters.accept(command);
 	}
 
 	public void shutdown() {

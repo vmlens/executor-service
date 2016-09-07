@@ -1,10 +1,12 @@
 com/vmlens/executorService/Consumer.class
+com/vmlens/executorService/internal/manyToOne/QueueManyWritersForThreadLocal.class
 com/vmlens/executorService/internal/service/WorkerThreadForRunnable.class
 com/vmlens/executorService/internal/manyToOne/QueueManyWriters.class
 com/vmlens/executorService/internal/oneToMany/QueueManyReaders.class
 com/vmlens/executorService/internal/manyToOne/QueueNode.class
 com/vmlens/executorService/internal/service/EventBusImpl.class
 com/vmlens/executorService/internal/oneToMany/ToBeConsumed.class
+com/vmlens/executorService/VMLensExecutors.class
 com/vmlens/executorService/internal/service/DispatcherThread.class
 com/vmlens/executorService/internal/manyToOne/ConcurrentLinkedList.class
 com/vmlens/executorService/internal/service/WorkerThread.class
@@ -14,7 +16,6 @@ com/vmlens/executorService/internal/service/WorkerThreadForEventConsumer.class
 com/vmlens/executorService/internal/ListNode.class
 com/vmlens/executorService/internal/service/IteratorForLinkedNode.class
 com/vmlens/executorService/internal/manyToOne/QueueSingleReader.class
-com/vmlens/executorService/VMLensExecutorServiceFactory.class
 com/vmlens/executorService/internal/manyToOne/LinkedNode.class
 com/vmlens/executorService/internal/manyToOne/LastWrittenQueueNode.class
 com/vmlens/executorService/internal/service/PoisenedMessage.class

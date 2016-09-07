@@ -54,7 +54,7 @@ public class TestEventBus {
 	    		
 	    		);
     	
-    	eventBus = VMLensExecutorServiceFactory.<String>createEventBus(consumerList.iterator());
+    	eventBus = VMLensExecutors.<String>createEventBus(consumerList.iterator());
     }
 			
 			

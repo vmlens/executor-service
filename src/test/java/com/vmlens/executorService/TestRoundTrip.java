@@ -18,7 +18,7 @@ import com.anarsoft.vmlens.concurrent.junit.ThreadCount;
 public class TestRoundTrip {
 
 	private static final int THREAD_COUNT = 5;
-	private final ExecutorService executorService = VMLensExecutorServiceFactory.create(THREAD_COUNT);
+	private final ExecutorService executorService = VMLensExecutors.newHighThroughputExecutorService(THREAD_COUNT);
 	
 	
 	@Test

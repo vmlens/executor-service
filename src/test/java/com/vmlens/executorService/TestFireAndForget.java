@@ -17,7 +17,7 @@ import com.anarsoft.vmlens.concurrent.junit.ThreadCount;
 public class TestFireAndForget {
 
 	private static final int THREAD_COUNT = 5;
-	private final ExecutorService executorService = VMLensExecutorServiceFactory.create(2);
+	private final ExecutorService executorService = VMLensExecutors.newHighThroughputExecutorService(2);
 	private final AtomicInteger processCount = new AtomicInteger();
 	
 	@Test

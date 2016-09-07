@@ -18,7 +18,7 @@ public class CreateMemoryLeak {
 
 
 	private static final int THREAD_COUNT = 5;
-	private final ExecutorService executorService = VMLensExecutorServiceFactory.create(2,false);
+	private final ExecutorService executorService = VMLensExecutors.newExecutorService(2,false);
 	
 	@After
 	public void tearDown() throws Exception {

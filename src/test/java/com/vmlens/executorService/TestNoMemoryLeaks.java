@@ -13,7 +13,7 @@ import com.anarsoft.vmlens.concurrent.junit.ThreadCount;
 public class TestNoMemoryLeaks {
 
 	private static final int THREAD_COUNT = 5;
-	private final ExecutorService executorService = VMLensExecutorServiceFactory.create(2);
+	private final ExecutorService executorService = VMLensExecutors.newHighThroughputExecutorService(2);
 	
 	@After
 	public void tearDown() throws Exception {

@@ -2,27 +2,33 @@ package com.vmlens.executorService.internal.service;
 
 import java.util.concurrent.TimeUnit;
 
+import com.vmlens.executorService.Consumer;
 import com.vmlens.executorService.EventBus;
+import com.vmlens.executorService.internal.manyToOne.ConcurrentLinkedList;
 import com.vmlens.executorService.internal.manyToOne.QueueManyWriters;
+import com.vmlens.executorService.internal.manyToOne.QueueManyWritersForThreadLocal;
 
 public class EventBusImpl<T> implements EventBus<T>   {
 
 	private final QueueManyWriters<T> queueManyWriters;
 	private final DispatcherThread dispatcherThread;
-	
-	
-//	public createConsumerForThreadLocalStorage()
-//	{
-//		
-//	}
+	private final ConcurrentLinkedList writingThreads;
 	
 	
 	
+	public Consumer<T> newConsumerForThreadLocalStorage()
+	{
+		return new QueueManyWritersForThreadLocal<T>(writingThreads,dispatcherThread);
+	}
 	
-	public EventBusImpl(QueueManyWriters<T> queueManyWriters, DispatcherThread dispatcherThread) {
+	
+	
+	
+	public EventBusImpl(QueueManyWriters<T> queueManyWriters, DispatcherThread dispatcherThread,ConcurrentLinkedList writingThreads) {
 		super();
 		this.queueManyWriters = queueManyWriters;
 		this.dispatcherThread = dispatcherThread;
+		this.writingThreads = writingThreads;
 	}
 
 	@Override
@@ -33,7 +39,7 @@ public class EventBusImpl<T> implements EventBus<T>   {
 
 	@Override
 	public void accept(T obj) {
-		queueManyWriters.push(obj);
+		queueManyWriters.accept(obj);
 		
 	}
 	
