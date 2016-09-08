@@ -109,7 +109,7 @@ public class VMLensExecutors {
 	
 	
 	
-	public static <T> EventBus<T> createEventBus(Iterator<Consumer<Iterator<T>>>  consumerIterator )
+	public static <T> EventBus<T> createEventBus(Iterator<Consumer<T>>  consumerIterator )
 	{
 		 ConcurrentLinkedList<T> writingThreads = new ConcurrentLinkedList<T>();
 		
@@ -120,7 +120,7 @@ public class VMLensExecutors {
 		 
 		 while(  consumerIterator.hasNext()  )
 		 {
-			 Consumer<Iterator<T>> consumer = consumerIterator.next();
+			 Consumer<T> consumer = consumerIterator.next();
 			 WorkerThreadForEventConsumer<T>  workerThreadForEventConsumer = new WorkerThreadForEventConsumer<T>(consumer); 
 			 
 			 if( start == null )

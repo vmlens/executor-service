@@ -36,6 +36,7 @@ public class DispatcherThread<T> extends Thread  {
 	public void run() {
 		
 		int waitIterations = 0;
+		long waitTime = 10;
 		
 		while( true )
 		{
@@ -76,11 +77,20 @@ public class DispatcherThread<T> extends Thread  {
 		 if( start != null )
 		 {
 			 queueSingleWriter.push(start);
+			 waitTime = 10;
 		 }
 		 else
 		 {
 			 
-			 LockSupport.parkNanos(100);
+			 LockSupport.parkNanos(waitTime);
+			 
+			 
+			 if( waitTime < 1000)
+			 {
+				 waitTime = waitTime * 10;
+			 }
+			 
+			
 			 
 			 if( stop )
 			 {

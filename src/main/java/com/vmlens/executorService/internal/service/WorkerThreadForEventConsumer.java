@@ -7,12 +7,12 @@ import com.vmlens.executorService.internal.manyToOne.LinkedNode;
 
 public class WorkerThreadForEventConsumer<E> extends WorkerThread<E> {
 
-	private final Consumer<Iterator<E>> eventConsumer;
+	private final Consumer<E> eventConsumer;
 	
 	
 	
 	
-	public WorkerThreadForEventConsumer(Consumer<Iterator<E>> eventConsumer) {
+	public WorkerThreadForEventConsumer(Consumer<E> eventConsumer) {
 		super();
 		this.eventConsumer = eventConsumer;
 	}
@@ -21,9 +21,16 @@ public class WorkerThreadForEventConsumer<E> extends WorkerThread<E> {
 
 
 	@Override
-	void processList(LinkedNode<E> current) {
+	void processList(LinkedNode<E> nodeList) {
 		
-		eventConsumer.accept(new IteratorForLinkedNode<E>(current));
+		Iterator<E> it = new IteratorForLinkedNode<E>(nodeList);
+		
+		while(it.hasNext() )
+		{
+			eventConsumer.accept(it.next());
+		}
+		
+		
 		
 		
 	}
