@@ -26,7 +26,7 @@ The tradeoff is that the latency is much higher than that of the  standard JDK e
 ```
 
 #License
-executor-service is released under the [Eclipse Public License 1.0](http://www.eclipse.org/legal/epl-v10.html)
+executor-service is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 #Blog Entries about executor-service
  * [A new high throughput java executor service](http://vmlens.com/articles/a-new-high-throughput-java-executor-service/) 12/09/2016
