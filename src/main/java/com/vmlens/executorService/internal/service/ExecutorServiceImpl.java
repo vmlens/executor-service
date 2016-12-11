@@ -13,15 +13,15 @@ public class ExecutorServiceImpl extends AbstractExecutorService {
 	
 	
 	private final QueueManyWriters<Runnable> queueManyWriters;
-	private final DispatcherThread dispatcherThread;
+	private final StopService stopService;
 	
 	
 	
 	
-	public ExecutorServiceImpl(QueueManyWriters<Runnable> queueManyWriters, DispatcherThread dispatcherThread) {
+	public ExecutorServiceImpl(QueueManyWriters<Runnable> queueManyWriters, StopService stopService) {
 		super();
 		this.queueManyWriters = queueManyWriters;
-		this.dispatcherThread = dispatcherThread;
+		this.stopService = stopService;
 	}
 
 	public void execute(Runnable command) {
@@ -30,24 +30,24 @@ public class ExecutorServiceImpl extends AbstractExecutorService {
 	}
 
 	public void shutdown() {
-		dispatcherThread.stop = true;
+		stopService.stop = true;
 		
 	}
 
 	public List<Runnable> shutdownNow() {
 		
-		dispatcherThread.stop = true;
+		stopService.stop = true;
 		
 		return Collections.<Runnable>emptyList();
 	}
 
 	public boolean isShutdown() {
 	
-		return dispatcherThread.stop;
+		return stopService.stop;
 	}
 
 	public boolean isTerminated() {
-		return dispatcherThread.terminated;
+		return stopService.terminated;
 	}
 
 	public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
@@ -55,11 +55,11 @@ public class ExecutorServiceImpl extends AbstractExecutorService {
 		
 		long waitTill =  System.nanoTime() + unit.toNanos(timeout);
 		
-		while( ! dispatcherThread.terminated )
+		while( ! stopService.terminated )
 		{
-			synchronized(dispatcherThread.terminationSignal)
+			synchronized(stopService.terminationSignal)
 			{
-				unit.timedWait(dispatcherThread.terminationSignal, timeout);
+				unit.timedWait(stopService.terminationSignal, timeout);
 			}
 			
 			
@@ -71,7 +71,7 @@ public class ExecutorServiceImpl extends AbstractExecutorService {
 			
 		}
 		
-		return dispatcherThread.terminated;
+		return stopService.terminated;
 	}
 
 

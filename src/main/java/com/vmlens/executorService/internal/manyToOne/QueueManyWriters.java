@@ -3,19 +3,19 @@ package com.vmlens.executorService.internal.manyToOne;
 import java.util.concurrent.RejectedExecutionException;
 
 
-import com.vmlens.executorService.internal.service.DispatcherThread;
+import com.vmlens.executorService.internal.service.StopService;
 
 public class QueueManyWriters<E>  {
 	
 	private final ConcurrentLinkedList writingThreads;
-	private final DispatcherThread dispatcherThread;
+	private final StopService stopService;
 	
 	
 	
-	public QueueManyWriters(ConcurrentLinkedList writingThreads, DispatcherThread dispatcherThread) {
+	public QueueManyWriters(ConcurrentLinkedList writingThreads, StopService stopService) {
 		super();
 		this.writingThreads = writingThreads;
-		this.dispatcherThread = dispatcherThread;
+		this.stopService = stopService;
 	}
 
 
@@ -28,9 +28,10 @@ public class QueueManyWriters<E>  {
 	public void accept(E element)
 	{
 		
-		if( dispatcherThread.stop )
+		if( stopService.stop )
 		{
-			throw new RejectedExecutionException();
+			stopService.onStop();
+			return;
 		}
 		
 		

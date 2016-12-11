@@ -11,29 +11,29 @@ import com.vmlens.executorService.internal.manyToOne.QueueManyWritersForThreadLo
 public class EventBusImpl<T> implements EventBus<T>   {
 
 	private final QueueManyWriters<T> queueManyWriters;
-	private final DispatcherThread dispatcherThread;
+	private final StopService stopService;
 	private final ConcurrentLinkedList writingThreads;
 	
 	
 	
-	public Consumer<T> newConsumerForThreadLocalStorage()
-	{
-		return new QueueManyWritersForThreadLocal<T>(writingThreads,dispatcherThread);
-	}
+//	public Consumer<T> newConsumerForThreadLocalStorage()
+//	{
+//		return new QueueManyWritersForThreadLocal<T>(writingThreads,dispatcherThread);
+//	}
 	
 	
 	
 	
-	public EventBusImpl(QueueManyWriters<T> queueManyWriters, DispatcherThread dispatcherThread,ConcurrentLinkedList writingThreads) {
+	public EventBusImpl(QueueManyWriters<T> queueManyWriters, StopService stopService,ConcurrentLinkedList writingThreads) {
 		super();
 		this.queueManyWriters = queueManyWriters;
-		this.dispatcherThread = dispatcherThread;
+		this.stopService = stopService;
 		this.writingThreads = writingThreads;
 	}
 
 	@Override
 	public void close() throws Exception {
-		dispatcherThread.stop = true;
+		stopService.stop = true;
 		
 	}
 
@@ -50,11 +50,11 @@ public class EventBusImpl<T> implements EventBus<T>   {
 		
 		long waitTill =  System.nanoTime() + unit.toNanos(timeout);
 		
-		while( ! dispatcherThread.terminated )
+		while( ! stopService.terminated )
 		{
-			synchronized(dispatcherThread.terminationSignal)
+			synchronized(stopService.terminationSignal)
 			{
-				unit.timedWait(dispatcherThread.terminationSignal, timeout);
+				unit.timedWait(stopService.terminationSignal, timeout);
 			}
 			
 			
@@ -66,7 +66,7 @@ public class EventBusImpl<T> implements EventBus<T>   {
 			
 		}
 		
-		return dispatcherThread.terminated;
+		return stopService.terminated;
 	}
 
 }

@@ -13,6 +13,41 @@ public abstract class WorkerThread<E> extends Thread implements Consumer<LinkedN
 	
 	private boolean stopped = false;
 	
+	
+
+
+
+
+
+
+
+	public WorkerThread() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+
+
+
+	public WorkerThread(String name) {
+		super(name);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+
+
+
+	public WorkerThread(ThreadGroup group, String name) {
+		super(group, name);
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 
 
 
@@ -50,6 +85,7 @@ public abstract class WorkerThread<E> extends Thread implements Consumer<LinkedN
 	   if(  current instanceof PoisenedMessage  )
 	   {
 		   stopped = true;
+		   onStop();
 	   }
 	   else
 	   {
@@ -58,34 +94,17 @@ public abstract class WorkerThread<E> extends Thread implements Consumer<LinkedN
 		
 		
 		
-//		while( current != null )
-//		{
-//			if( current.element instanceof PoisenedMessage )
-//			{
-//				stopped = true;
-//				
-//				
-//			}
-//			else
-//			{	
-//			
-//				current.element.run();
-//			
-//			}
-//
-//			
-//			current = current.next;
-//			
-//			
-//			
-//		}
+
 		
 		
 	}
 	
 	
 	abstract void processList(LinkedNode<E> current);
-	
+    protected void onStop()
+    {
+    	
+    }
 	
 	
 	

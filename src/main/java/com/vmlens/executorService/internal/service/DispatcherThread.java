@@ -11,19 +11,21 @@ public class DispatcherThread<T> extends Thread  {
 
 	private final QueueSingleWriter<LinkedNode<T>> queueSingleWriter;
 	private final QueueSingleReader<T> queueSingleReader;
+	private final StopService stopService;
 	
-	public volatile boolean  stop = false;
-	public volatile boolean terminated = false;
-	
-	public final Object terminationSignal = new Object(); 
 
 	
 	
 	
-	public DispatcherThread(QueueSingleWriter<LinkedNode<T>> queueSingleWriter, QueueSingleReader<T> queueSingleReader) {
-		super();
+	
+
+
+	public DispatcherThread(QueueSingleWriter<LinkedNode<T>> queueSingleWriter, QueueSingleReader<T> queueSingleReader, StopService stopService) {
+		super( "anarsoft");
 		this.queueSingleWriter = queueSingleWriter;
 		this.queueSingleReader = queueSingleReader;
+		this.stopService = stopService;
+		this.setDaemon(true);
 	}
 
 
@@ -92,7 +94,7 @@ public class DispatcherThread<T> extends Thread  {
 			 
 			
 			 
-			 if( stop )
+			 if( stopService.stop )
 			 {
 				 if( waitIterations > 3 )
 				 {
@@ -121,12 +123,12 @@ public class DispatcherThread<T> extends Thread  {
 		
 		
 		
-		terminated = true;
+		stopService.terminated = true;
 		
-		synchronized(terminationSignal)
+		synchronized(stopService.terminationSignal)
 		{
 			
-			terminationSignal.notifyAll();
+			stopService.terminationSignal.notifyAll();
 			
 			
 		}

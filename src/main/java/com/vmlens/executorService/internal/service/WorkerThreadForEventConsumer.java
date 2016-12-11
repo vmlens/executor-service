@@ -3,17 +3,19 @@ package com.vmlens.executorService.internal.service;
 import java.util.Iterator;
 
 import com.vmlens.executorService.Consumer;
+import com.vmlens.executorService.EventSink;
 import com.vmlens.executorService.internal.manyToOne.LinkedNode;
 
 public class WorkerThreadForEventConsumer<E> extends WorkerThread<E> {
 
-	private final Consumer<E> eventConsumer;
+	private final EventSink<E> eventConsumer;
 	
 	
 	
 	
-	public WorkerThreadForEventConsumer(Consumer<E> eventConsumer) {
-		super();
+	public WorkerThreadForEventConsumer(EventSink<E> eventConsumer) {
+		super( "anarsoft");
+		this.setDaemon(true);
 		this.eventConsumer = eventConsumer;
 	}
 
@@ -34,5 +36,11 @@ public class WorkerThreadForEventConsumer<E> extends WorkerThread<E> {
 		
 		
 	}
+	
+	@Override
+	  protected void onStop()
+	    {
+		  eventConsumer.close();
+	    }
 
 }

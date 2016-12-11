@@ -11,6 +11,7 @@ import com.vmlens.executorService.Consumer;
 import com.vmlens.executorService.internal.manyToOne.QueueManyWriters;
 import com.vmlens.executorService.internal.manyToOne.QueueSingleReader;
 import com.vmlens.executorService.internal.service.DispatcherThread;
+import com.vmlens.executorService.internal.service.StopService;
 
 @RunWith(ConcurrentTestRunner.class)
 public class QueueWritingTest {
@@ -26,8 +27,8 @@ public class QueueWritingTest {
 	@ThreadCount(THREAD_COUNT)
 	public void testWriting()
 	{
-		 DispatcherThread dispatcherThread = new DispatcherThread(null,null);
-		QueueManyWriters queueWriter = new QueueManyWriters(concurrentLinkedList,dispatcherThread);
+		StopService stopService = new StopService();   
+		QueueManyWriters queueWriter = new QueueManyWriters(concurrentLinkedList,stopService);
 		
 		for( int i = 0 ; i < ITERATION_COUNT ; i++)
 		{

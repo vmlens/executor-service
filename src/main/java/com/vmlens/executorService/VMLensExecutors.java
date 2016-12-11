@@ -13,6 +13,7 @@ import com.vmlens.executorService.internal.oneToMany.ToBeConsumed;
 import com.vmlens.executorService.internal.service.DispatcherThread;
 import com.vmlens.executorService.internal.service.EventBusImpl;
 import com.vmlens.executorService.internal.service.ExecutorServiceImpl;
+import com.vmlens.executorService.internal.service.StopService;
 import com.vmlens.executorService.internal.service.WorkerThreadForEventConsumer;
 import com.vmlens.executorService.internal.service.WorkerThreadForRunnable;
 
@@ -72,14 +73,14 @@ public class VMLensExecutors {
 			 current =  current.next;
 		 }
 		 
-		 
+		 StopService stopService = new StopService();
 		 
 		 
 		 QueueSingleWriter<LinkedNode<Runnable>> queueSingleWriter = new QueueSingleWriter<LinkedNode<Runnable>>(start);
-		 DispatcherThread dispatcherThread = new DispatcherThread(queueSingleWriter,queueSingleReader);
+		 DispatcherThread dispatcherThread = new DispatcherThread(queueSingleWriter,queueSingleReader,stopService);
 		 
 		
-		 QueueManyWriters<Runnable> queueManyWriters = new QueueManyWriters<Runnable>(writingThreads,dispatcherThread);
+		 QueueManyWriters<Runnable> queueManyWriters = new QueueManyWriters<Runnable>(writingThreads,stopService);
 		 
 		 if( startThreads )
 		 {
@@ -101,7 +102,7 @@ public class VMLensExecutors {
 		 
 		 
 		
-	 	return new ExecutorServiceImpl(queueManyWriters,dispatcherThread);
+	 	return new ExecutorServiceImpl(queueManyWriters,stopService);
 	}
 	
 	
@@ -109,7 +110,7 @@ public class VMLensExecutors {
 	
 	
 	
-	public static <T> EventBus<T> createEventBus(Iterator<Consumer<T>>  consumerIterator )
+	public static <T> EventBus<T> createEventBus(Iterator<EventSink<T>>  consumerIterator )
 	{
 		 ConcurrentLinkedList<T> writingThreads = new ConcurrentLinkedList<T>();
 		
@@ -120,7 +121,7 @@ public class VMLensExecutors {
 		 
 		 while(  consumerIterator.hasNext()  )
 		 {
-			 Consumer<T> consumer = consumerIterator.next();
+			 EventSink<T> consumer = consumerIterator.next();
 			 WorkerThreadForEventConsumer<T>  workerThreadForEventConsumer = new WorkerThreadForEventConsumer<T>(consumer); 
 			 
 			 if( start == null )
@@ -142,18 +143,18 @@ public class VMLensExecutors {
 		 
 		 
 		
-		 
+		 StopService stopService = new StopService();
 		 
 		 
 		 QueueSingleWriter<LinkedNode<T>> queueSingleWriter = new QueueSingleWriter<LinkedNode<T>>(start);
-		 DispatcherThread dispatcherThread = new DispatcherThread(queueSingleWriter,queueSingleReader);
+		 DispatcherThread dispatcherThread = new DispatcherThread(queueSingleWriter,queueSingleReader,stopService);
 		 
 		
 		 
 		 dispatcherThread.start();
 		 
 		 
-		 QueueManyWriters<T> queueManyWriters = new QueueManyWriters<T>(writingThreads,dispatcherThread);
+		 QueueManyWriters<T> queueManyWriters = new QueueManyWriters<T>(writingThreads,stopService);
 		 
 		 
 		 
@@ -162,7 +163,7 @@ public class VMLensExecutors {
 		 
 		 
 		
-	 	return new EventBusImpl<T>(queueManyWriters,dispatcherThread,writingThreads);
+	 	return new EventBusImpl<T>(queueManyWriters,stopService,writingThreads);
 	}
 
 	
