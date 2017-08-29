@@ -42,12 +42,13 @@ public class QueueManyWriters<E>  {
 	
 		if( lastWrittenQueueNode.get() == null )
 		{
-			writingThreads.append(current,Thread.currentThread().getId());
-			lastWrittenQueueNode.set(new LastWrittenQueueNode(current));
+			LastWrittenQueueNode node = new LastWrittenQueueNode(current,new WithBackPressure(250));
+			writingThreads.append(current,node.backPressure);
+			lastWrittenQueueNode.set(node);
 		}
 		else
 		{
-			
+			lastWrittenQueueNode.get().backPressure.writeOne();
 			lastWrittenQueueNode.get().last.next = current;
 			lastWrittenQueueNode.get().last = current;
 			

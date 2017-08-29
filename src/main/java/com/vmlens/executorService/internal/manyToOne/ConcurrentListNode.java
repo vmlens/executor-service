@@ -5,17 +5,17 @@ import com.vmlens.executorService.internal.ListNode;
 public class ConcurrentListNode<T> {
 	
 	 private  QueueNode<T> element;
-	 private final long threadId;
+	 private final BackPressureStrategy backPressure;
 	 public volatile ConcurrentListNode<T> next;
 	
 	
 	
 	
 	
-	public ConcurrentListNode(QueueNode<T> element, long threadId) {
+	public ConcurrentListNode(QueueNode<T> element, BackPressureStrategy backPressure) {
 		super();
 		this.element = element;
-		this.threadId = threadId;
+		this.backPressure = backPressure;
 	}
 
 
@@ -24,7 +24,7 @@ public class ConcurrentListNode<T> {
 
 	public ListNode<SingleReaderPointer<T>> createListNodeAndClearElement()
 	{
-		ListNode<SingleReaderPointer<T>> listNode =  new ListNode<SingleReaderPointer<T>>(new SingleReaderPointer<T>((QueueNode<T>) element),threadId);
+		ListNode<SingleReaderPointer<T>> listNode =  new ListNode<SingleReaderPointer<T>>(new SingleReaderPointer<T>((QueueNode<T>) element),backPressure);
 		element = null;
 		return listNode;
 	}

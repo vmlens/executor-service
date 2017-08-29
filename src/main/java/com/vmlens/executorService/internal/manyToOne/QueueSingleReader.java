@@ -26,14 +26,18 @@ public class QueueSingleReader<E> extends ProcessConcurrentList<E> {
 				{
 					public void accept(ListNode<SingleReaderPointer<E>> in)
 					{
+						
+						int readCount = 0;
+						
 						SingleReaderPointer<E> pointer = in.element;
 						
 						if( ! pointer.valueConsumed )
 						{
 							consumer.accept(pointer.value.element);
-							
+							readCount++;
 							
 							 pointer.valueConsumed = true;
+							 
 						}
 						
 						QueueNode<E> current = pointer.value.next;
@@ -43,15 +47,15 @@ public class QueueSingleReader<E> extends ProcessConcurrentList<E> {
 						while(  current != null )
 						{
 							consumer.accept(current.element);
-							
+							readCount++;
 							
 							pointer.value = current;
 							current = current.next;
-							
+						
 						}
 						
 						
-						
+						in.backPressure.read(readCount);
 						
 						
 						
@@ -62,15 +66,6 @@ public class QueueSingleReader<E> extends ProcessConcurrentList<E> {
 				
 				);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

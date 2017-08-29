@@ -10,7 +10,6 @@ import com.anarsoft.vmlens.concurrent.junit.ThreadCount;
 import com.vmlens.executorService.Consumer;
 import com.vmlens.executorService.internal.manyToOne.QueueManyWriters;
 import com.vmlens.executorService.internal.manyToOne.QueueSingleReader;
-import com.vmlens.executorService.internal.service.DispatcherThread;
 import com.vmlens.executorService.internal.service.StopService;
 
 @RunWith(ConcurrentTestRunner.class)

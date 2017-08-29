@@ -20,13 +20,14 @@ public class QueueManyWritersForThreadLocal<E> implements Consumer<E> {
 	
 	private final ConcurrentLinkedList writingThreads;
 	private final StopService stopService;
+	private final BackPressureStrategy backPressureStrategy;
 	
 	
-	
-	public QueueManyWritersForThreadLocal(ConcurrentLinkedList writingThreads, StopService stopService) {
+	public QueueManyWritersForThreadLocal(ConcurrentLinkedList writingThreads, StopService stopService, BackPressureStrategy backPressureStrategy) {
 		super();
 		this.writingThreads = writingThreads;
 		this.stopService = stopService;
+		this.backPressureStrategy = backPressureStrategy;
 	}
 
 
@@ -52,12 +53,13 @@ public class QueueManyWritersForThreadLocal<E> implements Consumer<E> {
 	
 		if( lastWrittenQueueNode == null )
 		{
-			writingThreads.append(current,Thread.currentThread().getId());
-			lastWrittenQueueNode = new LastWrittenQueueNode(current);
+			LastWrittenQueueNode node = new LastWrittenQueueNode(current,backPressureStrategy);
+			writingThreads.append(current,node.backPressure);
+			lastWrittenQueueNode = node;
 		}
 		else
 		{
-			
+			lastWrittenQueueNode.backPressure.writeOne();
 			lastWrittenQueueNode.last.next = current;
 			lastWrittenQueueNode.last = current;
 			

@@ -28,7 +28,6 @@ public class TestManyWrites {
 	@After
 	public void shutdownAndCheck() throws InterruptedException
 	{
-		
 		executorService.shutdown();
 		boolean terminated = executorService.awaitTermination(60,  TimeUnit.SECONDS );
 		
