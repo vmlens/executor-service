@@ -59,12 +59,13 @@ public class QueueReader<E>   {
 				{	eventSink.onWait();
 				
 				
-				   if( waitCount < 1000 )
-				   {
-					   waitCount++;
-					   Thread.yield();
-				   }
-				   else if( waitCount < 10000)
+//				   if( waitCount < 1000 )
+//				   {
+//					   waitCount++;
+//					   Thread.yield();
+//				   }
+//				   else 
+				   if( waitCount < 1000)
 				   {
 					   LockSupport.parkNanos(1);
 					   waitCount++;

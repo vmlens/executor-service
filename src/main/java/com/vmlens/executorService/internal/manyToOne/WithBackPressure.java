@@ -1,6 +1,6 @@
 package com.vmlens.executorService.internal.manyToOne;
 
-import java.util.concurrent.locks.LockSupport;
+import java.lang.reflect.Constructor;
 
 public class WithBackPressure implements BackPressureStrategy {
 
@@ -15,8 +15,26 @@ public class WithBackPressure implements BackPressureStrategy {
 	private  final int MAX_DIFF;
 	
 	
+   private static final sun.misc.Unsafe UNSAFE;
 	
-	
+   
+   static{
+	   
+	   try{
+	   Constructor<sun.misc.Unsafe> unsafeConstructor = sun.misc.Unsafe.class.getDeclaredConstructor();
+	   unsafeConstructor.setAccessible(true);
+	   UNSAFE = unsafeConstructor.newInstance();
+	   }
+	   catch(Exception e)
+	   {
+		   throw new RuntimeException(e);
+	   }
+	   
+	   
+   }
+   
+   
+   
 	
 	public WithBackPressure(int mAX_DIFF) {
 		super();
@@ -39,20 +57,33 @@ public class WithBackPressure implements BackPressureStrategy {
 			
 			waitCount++;
 			
-			if( waitCount > 100)
-			{
-				try{
-				Thread.sleep(1);
-				}
-				catch(Exception e)
-				{
-					
-				}
-			}
-			else
-			{
-				Thread.yield();
-			}
+			 if( waitCount < 1000)
+			   {
+				   UNSAFE.park(false, 1);
+				   waitCount++;
+			   }
+			   else 
+			   {
+				   UNSAFE.park(false, 10);
+				   //waitCount++;
+			   }
+			
+			
+			
+//			if( waitCount > 100)
+//			{
+//				try{
+//				Thread.sleep(1);
+//				}
+//				catch(Exception e)
+//				{
+//					
+//				}
+//			}
+//			else
+//			{
+//				Thread.yield();
+//			}
 			
 			diff = written - read;
 		}
