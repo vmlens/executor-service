@@ -2,7 +2,7 @@ package com.vmlens.executorService;
 
 public interface Consumer<T> {
 
-	void accept(T obj);
+	void accept(FillEvent<T>  fillEvent ) ;
 	
 	
 }
