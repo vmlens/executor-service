@@ -79,12 +79,12 @@ public class ProzessAllRingsRunnable<T> implements Runnable {
 		}
 		
 		
-		for(int i = 0 ; i < 10000; i++)
-		{
-			execute();
-			 
-			 UNSAFE.park(false, 10);
-		}
+//		for(int i = 0 ; i < 10; i++)
+//		{
+//			execute();
+//			 
+//			 UNSAFE.park(false, 10);
+//		}
 		
 		
 		eventSink.close();

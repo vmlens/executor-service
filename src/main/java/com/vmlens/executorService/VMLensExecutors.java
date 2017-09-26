@@ -17,9 +17,9 @@ public class VMLensExecutors {
 		
 	
 	
-	public static <T> EventBus<T> createEventBus(EventFactory<T>  eventFactory  )
+	public static <T> EventBus<T> createEventBus( )
 	{	 
-		 return new EventBusImpl<T>(eventFactory);
+		 return new EventBusImpl<T>();
 	}
 
 	

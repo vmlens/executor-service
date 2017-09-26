@@ -29,6 +29,9 @@ public class ProzessOneRing<T> {
 			while( current.state == RingElement.IS_FULL)
 			{
 				eventSink.execute( current.event );
+				
+				current.event  = null;
+				
 				current.state = RingElement.IS_EMPTY;
 				
 				somethingProzessed = true;

@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 
 import com.vmlens.executorService.Consumer;
 import com.vmlens.executorService.EventBus;
-import com.vmlens.executorService.EventFactory;
 import com.vmlens.executorService.EventSink;
 
 import gnu.trove.iterator.TLongObjectIterator;
@@ -14,7 +13,7 @@ import gnu.trove.map.hash.TLongObjectHashMap;
 public class EventBusImpl<T> implements EventBus<T> {
 	
 	
-	private final  EventFactory<T>  eventFactory;
+	
 	
 	
 	
@@ -34,16 +33,15 @@ public class EventBusImpl<T> implements EventBus<T> {
     
     
   
-	 public EventBusImpl(EventFactory<T> eventFactory) {
+	 public EventBusImpl() {
 		super();
-		this.eventFactory = eventFactory;
 	}
 
 
 	public Consumer<T> newConsumerForThreadLocalStorage(Thread thread)
 	 {
 		 
-		Ring<T> ring = new Ring<T>(thread,eventFactory,this); 
+		Ring<T> ring = new Ring<T>(thread,this); 
 		 
 		synchronized(threadId2PerThreadQueueLock)
 		{

@@ -11,12 +11,9 @@ class RingElement<T> {
 	
 	volatile int state;
 	volatile RingElement<T> next;
-    final T event;
+    T event;
 	
-	public RingElement(T event) {
-		super();
-		this.event = event;
-	}
+
 	
 	
 
