@@ -43,7 +43,7 @@ public class EventBusImpl<T> implements EventBus<T> {
 	public Consumer<T> newConsumerForThreadLocalStorage(Thread thread)
 	 {
 		 
-		Ring<T> ring = new Ring<T>(thread,eventFactory); 
+		Ring<T> ring = new Ring<T>(thread,eventFactory,this); 
 		 
 		synchronized(threadId2PerThreadQueueLock)
 		{

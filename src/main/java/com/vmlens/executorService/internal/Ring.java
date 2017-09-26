@@ -13,9 +13,9 @@ public class Ring<T> implements Consumer<T>  {
 	private RingElement<T> lastWritten;
 	private final Thread thread;
 	private final EventFactory<T> eventFactory;
+	private final EventBusImpl<T> eventBus;
 	
-	
-	public Ring(Thread thread,EventFactory<T> eventFactory) {
+	public Ring(Thread thread,EventFactory<T> eventFactory,EventBusImpl<T> eventBus) {
 		super();
 		this.thread = thread;
 		this.eventFactory = eventFactory;
@@ -25,6 +25,7 @@ public class Ring<T> implements Consumer<T>  {
 		
 		RingElement<T> current = startNode;
 		
+		this.eventBus = eventBus;
 		
 		for(int i = 0 ; i < 10 ; i++)
 		{
@@ -42,6 +43,13 @@ public class Ring<T> implements Consumer<T>  {
 	@Override
 	public void accept(FillEvent<T> fillEvent) {
 		
+		if( eventBus.isStopped )
+		{
+			return;
+		}
+		
+		
+		
 		if( lastWritten == null)
 		{
 			lastWritten = startNode;
@@ -50,65 +58,45 @@ public class Ring<T> implements Consumer<T>  {
 		
 		
 		
-		if( ! lastWritten.isFull  )
+		if(  lastWritten.state == RingElement.IS_EMPTY  )
 		{
 			fillEvent.fill( lastWritten.event );
 			
-			lastWritten.isFull = true;
+			lastWritten.state =  RingElement.IS_FULL;
 			lastWritten = lastWritten.next;
-			return;
-			
 		}
 		else
 		{
-			RingElement<T> current = lastWritten;
 			
-			while( current.next != null && current.isFull )
+			if( lastWritten.compareAndSet(RingElement.IS_FULL, RingElement.IS_CHANGED) )
 			{
-				current = current.next;
-			}
+				RingElement<T>  next = lastWritten.next;
+				lastWritten.next =new RingElement<T>( eventFactory.create() );
+				lastWritten.next.next = next;
 				
-			
-			if(  !  current.isFull )
-			{
-				fillEvent.fill(  current.event );
-				current.isFull = true;
-				lastWritten = current.next;
-				return;
+				RingElement<T> changed = lastWritten;
+				
+				lastWritten = lastWritten.next;
+				
+				fillEvent.fill( lastWritten.event );
+				
+				changed.state = RingElement.IS_FULL;
+				lastWritten.state =  RingElement.IS_FULL;
+				
+				
+				lastWritten = lastWritten.next;
+				
 			}
 			else
 			{
-				current = startNode;
+				fillEvent.fill( lastWritten.event );
 				
-				while( current.next != null && current.isFull )
-				{
-					current = current.next;
-				}
-					
-				
-				if(  !  current.isFull )
-				{
-					fillEvent.fill(  current.event );
-					current.isFull = true;
-					lastWritten = current.next;
-					return;
-				}
-				else
-				{
-					current.next = new  RingElement<T>( eventFactory.create() );
-					current.isFull = true;
-					lastWritten = current;
-					return;
-				}
-				
-				
+				lastWritten.state =  RingElement.IS_FULL;
+				lastWritten = lastWritten.next;
 			}
 			
 			
-			
-			
-			
-		}
+		}	
 		
 		
 		

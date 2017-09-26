@@ -21,30 +21,30 @@ public class ProzessOneRing<T> {
 		
 		 RingElement<T> current = lastRead;
 		
-		for(int i = 0 ; i < 10 ; i++)
-		{
-		
 			if( current == null )
 			{
 				current = ring.startNode;
 			}
 			
-			if( current.isFull)
+			while( current.state == RingElement.IS_FULL)
 			{
 				eventSink.execute( current.event );
-				current.isFull = false;
+				current.state = RingElement.IS_EMPTY;
 				
 				somethingProzessed = true;
 				
-			}
+				current = current.next;
 				
-			current = current.next;
-		
+				if( current == null )
+				{
+					current = ring.startNode;
+				}
+				
+			}
 			
-		}
+			
+			lastRead= current;
 		
-		
-		lastRead = current;
 		
 		
 		return somethingProzessed;
