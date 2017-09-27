@@ -19,7 +19,7 @@ public class EventBusImpl<T> implements EventBus<T> {
 	
 	
 	
-	private final TLongObjectHashMap<Ring<T>> threadId2Ring = new TLongObjectHashMap<Ring<T>>();
+	private  TLongObjectHashMap<LinkedList<T>> threadId2Ring = new TLongObjectHashMap<LinkedList<T>>();
     private final Object threadId2PerThreadQueueLock = new Object();
 	
     
@@ -41,7 +41,7 @@ public class EventBusImpl<T> implements EventBus<T> {
 	public Consumer<T> newConsumerForThreadLocalStorage(Thread thread)
 	 {
 		 
-		Ring<T> ring = new Ring<T>(thread,this); 
+		LinkedList<T> ring = new LinkedList<T>(this,thread); 
 		 
 		synchronized(threadId2PerThreadQueueLock)
 		{
@@ -56,25 +56,25 @@ public class EventBusImpl<T> implements EventBus<T> {
 	 }
 
 
-	public void syndicate(TLongObjectHashMap<ProzessOneRing<T>> threadId2ProzessOneRing) {
+	public void syndicate(TLongObjectHashMap<ProzessOneList<T>> threadId2ProzessOneRing) {
 		
 		
 		synchronized(threadId2PerThreadQueueLock)
 		{
 			
-			TLongObjectIterator<Ring<T>> iterator = threadId2Ring.iterator();
+			TLongObjectIterator<LinkedList<T>> iterator = threadId2Ring.iterator();
 			
 			while( iterator.hasNext() )
 			{
 				iterator.advance();
 				
-				if( ! threadId2ProzessOneRing.contains(  iterator.key() )  )
-				{
-					threadId2ProzessOneRing.put(   iterator.key()  , new ProzessOneRing(iterator.value()) );
-				}
+					threadId2ProzessOneRing.put(   iterator.key()  , new ProzessOneList<T>(iterator.value()) );
+				
 			
-			}
-			;
+			};
+			
+			
+		threadId2Ring = new TLongObjectHashMap<LinkedList<T>>();
 			
 		}
 		
@@ -132,7 +132,7 @@ public class EventBusImpl<T> implements EventBus<T> {
 
 	@Override
 	public void start(EventSink<T> consumer, ThreadFactory threadFactory) {
-		 Thread workerThread = threadFactory.newThread(new ProzessAllRingsRunnable<T>(consumer,this));
+		 Thread workerThread = threadFactory.newThread(new ProzessAllListsRunnable<T>(consumer,this));
 		 workerThread.start();
 		
 	}
