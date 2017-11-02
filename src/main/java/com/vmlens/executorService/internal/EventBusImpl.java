@@ -27,8 +27,8 @@ public class EventBusImpl<T> implements EventBus<T> {
     
     
     
-    private boolean isTerminated ;
-    private final Object isTerminatedLock = new Object();
+    private volatile boolean isTerminated ;
+   
     
     
     
@@ -39,20 +39,13 @@ public class EventBusImpl<T> implements EventBus<T> {
 
 
 	public Consumer<T> newConsumerForThreadLocalStorage(Thread thread)
-	 {
-		 
+	{
 		LinkedList<T> ring = new LinkedList<T>(this,thread); 
-		 
 		synchronized(threadId2PerThreadQueueLock)
 		{
 			threadId2Ring.put( thread.getId() , ring );	
 		}
-		
-		
 		return ring;
-		
-		
-		
 	 }
 
 
@@ -84,40 +77,15 @@ public class EventBusImpl<T> implements EventBus<T> {
 
 
 	public void runnableIsTerminated() {
-		synchronized(isTerminatedLock)
-		{
+		
 			isTerminated = true;
-			isTerminatedLock.notifyAll();
-		}
 		
 	}
 
 
 	@Override
-	public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-    long waitTill =  System.nanoTime() + unit.toNanos(timeout);
-		
-		synchronized(isTerminatedLock)
-		{
-		while( ! isTerminated )
-		{
-			
-
-				unit.timedWait(isTerminatedLock, timeout);
-			
-			
-			
-			if( waitTill <  System.nanoTime()  )
-			{
-				return isTerminated;
-			}
-			
-			
-		}
-			
-		return isTerminated;
-			
-		}
+	public boolean isTerminated() {
+       return isTerminated;
 		
 		
 	}
@@ -135,6 +103,12 @@ public class EventBusImpl<T> implements EventBus<T> {
 		 Thread workerThread = threadFactory.newThread(new ProzessAllListsRunnable<T>(consumer,this));
 		 workerThread.start();
 		
+	}
+
+
+	@Override
+	public Consumer<T> newConsumer() {
+		return new ThreadLocalConsumer<T>(this);
 	}
 
 

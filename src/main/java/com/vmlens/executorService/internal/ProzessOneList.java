@@ -51,33 +51,21 @@ public class ProzessOneList<T> {
 	
 	
     public void prozessWithoutReadCount(EventSink<T> eventSink) {
-		
 		if(list.lastRead  != null  )
 		{
-			
-			// Das ist nur am start
-			
+			// First element read			
 			if(  ! list.lastRead.isRead )
 			{
 				eventSink.execute( list.lastRead.element.event  );
-				
 				list.lastRead.isRead = true;
-			
 			}
-			
 			LinkedListElement<T> current = list.lastRead.element;
-			
 			while(  current.next != null )
 			{
-			
 				eventSink.execute( current.event  );
-			
 				current = current.next;
-			
 			}
-			
-			list.lastRead.element = current;
-				
+			list.lastRead.element = current;	
 		}	
 		
 	}
