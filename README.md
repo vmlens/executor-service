@@ -44,8 +44,7 @@ Creating and starting the event bus:
 				 {
 					@Override
 					public Thread newThread(Runnable r) {
-						// TODO Auto-generated method stub
-						return new Thread();
+						return new Thread(r);
 					}
 					 
 				 });
