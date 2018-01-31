@@ -21,9 +21,9 @@ public class VMLensExecutors {
 	 * 
 	 */
 	
-	public static <T> EventBus<T> createEventBus( )
+	public static <T> EventBus<T> createEventBus(int queueSize )
 	{	 
-		 return new EventBusImpl<T>();
+		 return new EventBusImpl<T>(queueSize);
 	}
 
 	

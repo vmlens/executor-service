@@ -139,6 +139,29 @@
         </configuration>
       </plugin>
       
+      	<plugin>
+				<groupId>com.vmlens</groupId>
+				<artifactId>vmlens-maven-plugin</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+				<configuration>
+                  <includes>
+                       <include>**/TestMultiThreaded*.java</include>
+                  </includes>
+				</configuration>
+
+				<executions>
+					<execution>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+
+			</plugin>
+      
+      
+      
+      
       
     </plugins>
   </build>
@@ -168,6 +191,13 @@
 			<version>1.0.0</version>
 			<scope>test</scope>
 	</dependency>
+	
+			<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+				<scope>test</scope>
+		</dependency>
 	
 	
 	

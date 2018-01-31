@@ -180,31 +180,38 @@ public class ProzessAllListsRunnable<T> implements Runnable {
 	}
 	
 	
+	public void oneIteration( TLongObjectHashMap<ProzessOneList<T>> threadId2ProzessOneRing)
+	{
+		
+		 NonVolatileLinkedListElement<T> hotList = executeAllLists(threadId2ProzessOneRing);
+		 
+		 
+		 if(hotList == null)
+		 {
+			 UNSAFE.park(false, 1);
+				
+				eventSink.onWait();
+		 }
+		 else
+		 {
+			 prozessHotlist(hotList);
+		 }
+	}
+	
 	
 	@Override
 	public void run() {
+		
+		
 		
 		
 		TLongObjectHashMap<ProzessOneList<T>> threadId2ProzessOneRing= new TLongObjectHashMap<ProzessOneList<T>>();
 		
 		while(!  eventBus.isStopped  )
 		{
-			
-			 NonVolatileLinkedListElement<T> hotList = executeAllLists(threadId2ProzessOneRing);
+		
 			 
-			 
-			 if(hotList == null)
-			 {
-				 UNSAFE.park(false, 1);
-					
-					eventSink.onWait();
-			 }
-			 else
-			 {
-				 prozessHotlist(hotList);
-			 }
-			 
-			
+			oneIteration(threadId2ProzessOneRing);
 			
 		}
 		
@@ -238,7 +245,7 @@ public class ProzessAllListsRunnable<T> implements Runnable {
 			
 		}
 		
-		
+	
 				
 				
 		eventSink.close();

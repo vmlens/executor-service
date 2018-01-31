@@ -14,7 +14,8 @@ package com.vmlens.executorService;
 public interface Consumer<T> {
 
 	
-	void accept(T  event ) ;
+	void accept(T  event );
+    void acceptWithoutBackPressure(T  event);
 	
 	
 }

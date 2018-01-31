@@ -18,7 +18,7 @@ public class EventBusImpl<T> implements EventBus<T> {
 	
 	
 	
-	
+	private final int queueSize;
 	private  TLongObjectHashMap<LinkedList<T>> threadId2Ring = new TLongObjectHashMap<LinkedList<T>>();
     private final Object threadId2PerThreadQueueLock = new Object();
 	
@@ -33,14 +33,15 @@ public class EventBusImpl<T> implements EventBus<T> {
     
     
   
-	 public EventBusImpl() {
-		super();
+	 public EventBusImpl(int queueSize) {
+		this.queueSize = queueSize;
+		
 	}
 
 
 	public Consumer<T> newConsumerForThreadLocalStorage(Thread thread)
 	{
-		LinkedList<T> ring = new LinkedList<T>(this,thread); 
+		LinkedList<T> ring = new LinkedList<T>(this,thread,queueSize); 
 		synchronized(threadId2PerThreadQueueLock)
 		{
 			threadId2Ring.put( thread.getId() , ring );	
@@ -102,7 +103,6 @@ public class EventBusImpl<T> implements EventBus<T> {
 	public void start(EventSink<T> consumer, ThreadFactory threadFactory) {
 		 Thread workerThread = threadFactory.newThread(new ProzessAllListsRunnable<T>(consumer,this));
 		 workerThread.start();
-		
 	}
 
 
